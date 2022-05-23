@@ -6,6 +6,8 @@ import './src/database';
 
 import express from 'express';
 import { resolve } from 'path';
+import cors from 'cors';
+import helmet from 'helmet';
 import homeRoute from './src/routes/homeRoutes';
 import userRoute from './src/routes/userRoutes';
 import tokenRoute from './src/routes/tokenRoutes';
@@ -20,6 +22,8 @@ class App {
   }
 
   middleware() {
+    this.app.use(cors());
+    this.app.use(helmet());
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(express.json());
     this.app.use(express.static(resolve(__dirname, 'uploads')));
