@@ -2,17 +2,32 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-import './src/database';
+import './database';
 
 import express from 'express';
 import { resolve } from 'path';
 import cors from 'cors';
 import helmet from 'helmet';
-import homeRoute from './src/routes/homeRoutes';
-import userRoute from './src/routes/userRoutes';
-import tokenRoute from './src/routes/tokenRoutes';
-import alunoRoute from './src/routes/alunoRoutes';
-import fotoRoute from './src/routes/fotoRoutes';
+import homeRoute from './routes/homeRoutes';
+import userRoute from './routes/userRoutes';
+import tokenRoute from './routes/tokenRoutes';
+import alunoRoute from './routes/alunoRoutes';
+import fotoRoute from './routes/fotoRoutes';
+
+const whiteList = [
+  'https://forcaweb.com.br',
+  'http://localhost:3001',
+];
+
+const corsOptions = {
+  origin(oringin, callback) {
+    if (whiteList.indexOf(oringin) !== -1 || !oringin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allow by Cors!'));
+    }
+  },
+};
 
 class App {
   constructor() {
@@ -22,7 +37,7 @@ class App {
   }
 
   middleware() {
-    this.app.use(cors());
+    this.app.use(cors(corsOptions));
     this.app.use(helmet());
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(express.json());
